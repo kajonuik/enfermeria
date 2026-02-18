@@ -39,7 +39,7 @@ CONTACTO:
     try {
         const { message, context } = req.body;
         const API_KEY = process.env.GEMINI_API_KEY;
-        const MODEL_NAME = "gemini-3-pro";
+        const MODEL_NAME = "gemini-2.5-flash";
 
         // Combinamos la DATA del servidor con las INSTRUCCIONES y el MENSAJE
         const fullPrompt = `CONTEXTO INSTITUCIONAL:\n${DATA_FACULTAD}\n\nINSTRUCCIONES DE COMPORTAMIENTO:\n${context}\n\nPREGUNTA DEL USUARIO:\n${message}`;
