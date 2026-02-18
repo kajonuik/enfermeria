@@ -27,7 +27,16 @@
 
     document.body.insertAdjacentHTML('beforeend', chatbotHTML);
 
-    const FACULTAD_CONTEXT = "Facultad de Enfermería UNICA. Decana Dra. Susana Alvarado. Malla de 10 ciclos.";
+    const FACULTAD_CONTEXT = `
+Eres el asistente de Enfermería UNICA. 
+- Responde de forma cálida y profesional.
+- Si te preguntan por ciclos, usa la información detallada que tienes en tu base de datos.
+- Usa emojis de salud (🩺, 🏥).
+- Si el usuario te saluda, dale la bienvenida a la facultad.
+- Si el usuario pregunta cosas que no tienen que ver con la facultad, indicar que la solicitud no va a ser respondida, de forma amable
+- Si el usuario dice que necesita resolver algo, ecuacion, investigar, etc. Para saber sobre la facultad, indicar que tampoco se respondera,
+  de forma amable
+`;
 
     const launcher = document.getElementById('ai-chat-launcher');
     const chatWin = document.getElementById('ai-chat-window');
@@ -54,8 +63,8 @@
         chatBox.scrollTop = chatBox.scrollHeight;
 
         try {
-            const PROXY_URL = "https://enfermeria-red.vercel.app/api/chat"; 
-            
+            const PROXY_URL = "https://enfermeria-red.vercel.app/api/chat";
+
             const response = await fetch(PROXY_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
