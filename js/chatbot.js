@@ -1,6 +1,3 @@
-// js/chatbot.js
-
-// 1. Inyectamos el HTML dinámicamente al final del body
 const chatbotHTML = `
 <div id="ai-chat-launcher" style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; cursor: pointer;">
     <div style="background-color: #6f42c1; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
@@ -15,22 +12,20 @@ const chatbotHTML = `
     </div>
     <div id="chat-box" style="flex: 1; padding: 15px; overflow-y: auto; font-size: 13px; background: #f8f9fa; display: flex; flex-direction: column; gap: 10px;">
         <div style="background: #e9ecef; padding: 10px; border-radius: 10px; align-self: flex-start; color: #333; border-bottom-left-radius: 0;">
-            ¡Hola! Soy el asistente virtual de la Facultad de Enfermería. ¿Tienes dudas sobre la admisión, el aula virtual o los programas?
+            ¡Hola! Soy el asistente virtual de la Facultad de Enfermería UNICA. ¿En qué puedo ayudarte hoy?
         </div>
     </div>
     <div style="padding: 12px; border-top: 1px solid #eee; background: white;">
-        <div class="input-group">
-            <input type="text" id="user-msg" class="form-control form-control-sm" placeholder="Escribe tu consulta aquí...">
-            <button id="send-btn" class="btn btn-sm btn-info text-white"><i class="fas fa-paper-plane"></i></button>
+        <div class="input-group" style="display: flex; gap: 5px;">
+            <input type="text" id="user-msg" class="form-control" style="font-size: 13px;" placeholder="Escribe aquí...">
+            <button id="send-btn" class="btn btn-info text-white" style="padding: 5px 15px;"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 </div>
 `;
 
-// Insertamos el HTML en el documento
 document.body.insertAdjacentHTML('beforeend', chatbotHTML);
 
-// 2. Lógica de la IA (JavaScript puro)
 const API_KEY = "AIzaSyDcA2sCiyS_EJVErU7vKL5YvKpDDviYRJk"; 
 
 const launcher = document.getElementById('ai-chat-launcher');
@@ -43,18 +38,18 @@ const chatBox = document.getElementById('chat-box');
 launcher.onclick = () => {
     chatWin.style.display = (chatWin.style.display === 'none' || chatWin.style.display === '') ? 'flex' : 'none';
 };
-
 closeBtn.onclick = () => { chatWin.style.display = 'none'; };
 
-async function askAI(message) {
-    if(!message.trim()) return;
+async function askAI() {
+    const message = userMsg.value.trim();
+    if (!message) return;
 
     chatBox.innerHTML += `<div style="background: #6f42c1; color: white; padding: 10px; border-radius: 10px; align-self: flex-end; max-width: 85%; border-bottom-right-radius: 0;">${message}</div>`;
     chatBox.scrollTop = chatBox.scrollHeight;
     userMsg.value = "";
 
     const tempId = "loading-" + Date.now();
-    chatBox.innerHTML += `<div id="${tempId}" style="background: #eee; padding: 10px; border-radius: 10px; align-self: flex-start; font-style: italic; color: #777;">Escribiendo...</div>`;
+    chatBox.innerHTML += `<div id="${tempId}" style="background: #eee; padding: 10px; border-radius: 10px; align-self: flex-start; font-style: italic; color: #777;">La IA está pensando...</div>`;
     chatBox.scrollTop = chatBox.scrollHeight;
 
     try {
@@ -63,13 +58,14 @@ async function askAI(message) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 contents: [{
-                    parts: [{ text: "Eres el asistente oficial de la Facultad de Enfermería de la UNICA. Responde brevemente: " + message }]
+                    parts: [{ text: "Eres el asistente virtual de la Facultad de Enfermería de la Universidad Nacional San Luis Gonzaga (UNICA). Responde de forma amable y breve sobre temas de enfermería o la facultad: " + message }]
                 }]
             })
         });
 
         const data = await response.json();
-        document.getElementById(tempId).remove();
+        const loadingElement = document.getElementById(tempId);
+        if (loadingElement) loadingElement.remove();
 
         if (data.error) throw new Error(data.error.message);
 
@@ -77,11 +73,13 @@ async function askAI(message) {
         chatBox.innerHTML += `<div style="background: #e9ecef; padding: 10px; border-radius: 10px; align-self: flex-start; max-width: 85%; color: #333; border-bottom-left-radius: 0;">${aiText}</div>`;
         
     } catch (e) {
-        if(document.getElementById(tempId)) document.getElementById(tempId).remove();
-        chatBox.innerHTML += `<div style="color: #dc3545; font-size: 11px; text-align: center; padding: 5px;">Error de conexión.</div>`;
+        console.error("Error:", e);
+        const loadingElement = document.getElementById(tempId);
+        if (loadingElement) loadingElement.remove();
+        chatBox.innerHTML += `<div style="color: #dc3545; font-size: 11px; text-align: center; padding: 5px;">Error de conexión. Revisa tu API Key.</div>`;
     }
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-sendBtn.onclick = () => askAI(userMsg.value);
-userMsg.onkeypress = (e) => { if(e.key === 'Enter') askAI(userMsg.value); };
+sendBtn.onclick = askAI;
+userMsg.onkeypress = (e) => { if (e.key === 'Enter') askAI(); };
