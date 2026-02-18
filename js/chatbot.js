@@ -1,5 +1,5 @@
 const chatbotHTML = `
-<div id="ai-chat-launcher" style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; cursor: pointer;">
+<div id="ai-chat-launcher" style="position: fixed; bottom: 20px; left: 20px; z-index: 99; cursor: pointer;">
     <div style="background-color: #6f42c1; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
         <i class="fas fa-robot text-white" style="font-size: 24px;"></i>
     </div>
