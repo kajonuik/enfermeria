@@ -39,11 +39,11 @@ CONTACTO:
     try {
         const { message, context } = req.body;
         const API_KEY = process.env.GEMINI_API_KEY;
+        const MODEL_NAME = "gemini-3-pro";
 
         // Combinamos la DATA del servidor con las INSTRUCCIONES y el MENSAJE
         const fullPrompt = `CONTEXTO INSTITUCIONAL:\n${DATA_FACULTAD}\n\nINSTRUCCIONES DE COMPORTAMIENTO:\n${context}\n\nPREGUNTA DEL USUARIO:\n${message}`;
-
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${API_KEY}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
